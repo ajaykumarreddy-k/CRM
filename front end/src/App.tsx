@@ -124,7 +124,7 @@ function CRMApp() {
 export default function App() {
   return (
     <ErrorBoundary>
-      <BrowserRouter>
+      <BrowserRouter basename="/app">
         <AuthProvider>
           <Routes>
             {/* Public routes */}

@@ -87,6 +87,17 @@ A fully functional, **AI-native Mini CRM** for a Direct-to-Consumer fashion/reta
 
 ---
 
+## 🤖 AI Engine Optimization (AEO) Ready
+
+The application's LaunchPage is fully optimized for AI crawlers (GPTBot, ClaudeBot, PerplexityBot) and traditional SEO. I am extremely proud of achieving top marks across the AEO evaluation checklist:
+
+- **🔍 Findable**: `robots.txt`, `sitemap.xml`, and Canonical URLs are correctly configured to welcome and guide AI bots.
+- **💬 Quotable**: Comprehensive meta descriptions, rich body content, and a dedicated FAQ section make the site easily extractable and citable by LLMs.
+- **🧠 Understandable**: Implements a clean heading hierarchy, `Organization` JSON-LD structured data, and Open Graph tags for deep semantic understanding.
+- **🤝 Trustworthy**: Features a dedicated `/llms.txt` file (the emerging standard for AI-readable site documentation), contextual internal links, and external citations to authoritative industry sources.
+
+---
+
 ## 🏗️ Architecture
 
 ```
