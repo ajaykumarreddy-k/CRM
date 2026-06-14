@@ -1,0 +1,8 @@
+# XENO CRM
+
+XENO is the AI platform for customer relationships. It empowers teams to achieve their goals, engage with customers, and drive growth using advanced AI segmentation, campaign dispatch, and real-time analytics. 
+Key features include:
+- AI-powered customer segmentation
+- Omni-channel campaign dispatch
+- Real-time funnel analytics
+- Gemini-powered smart inbox replies
