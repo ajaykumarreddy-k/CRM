@@ -1,0 +1,32 @@
+[project]
+name = "xeno-backend"
+version = "0.1.0"
+description = "XENO Mini CRM — FastAPI + SQLAlchemy + Gemini backend"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi==0.111.0",
+    "uvicorn[standard]==0.29.0",
+    "sqlalchemy==2.0.30",
+    "alembic==1.13.1",
+    "pydantic==2.7.1",
+    "python-dotenv==1.0.1",
+    "httpx==0.27.0",
+    "google-generativeai==0.5.4",
+]
+
+# ── Entry-point scripts (installed into .venv/bin after `uv sync`) ──────────
+# Usage:  uv run crm | uv run channel | uv run seed | uv run test
+[project.scripts]
+crm     = "scripts:run_crm"
+channel = "scripts:run_channel"
+seed    = "scripts:run_seed"
+test    = "scripts:run_tests"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+# Include everything in the backend folder as the package source
+packages = ["."]
+

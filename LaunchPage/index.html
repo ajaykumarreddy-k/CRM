@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XENO CRM - The AI Platform for Customer Relationships</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            navy: '#1a1c20',
+                            darkBlue: '#1a1c20',
+                            royal: '#2563eb',
+                            primary: '#2563eb',
+                            purple: '#2563eb',
+                            lightBg: '#f6f8fb',
+                            cardDark: '#1a1c20',
+                            cardBorder: 'rgba(0, 0, 0, 0.08)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Google Sans"', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'premium': '0 20px 40px -15px rgba(0, 0, 0, 0.05), 0 0 20px rgba(0,0,0,0.02)',
+                        'glow': '0 0 40px rgba(90, 82, 255, 0.4)',
+                        'floating': '0 30px 60px -15px rgba(0, 0, 0, 0.1)'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Sans via CDN -->
+    <link href="https://fonts.cdnfonts.com/css/google-sans" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Google Sans', sans-serif;
+            background-color: #ffffff;
+            color: #0f172a;
+            overflow-x: hidden;
+        }
+        
+        /* Precision Hero Gradient - Elliptical curve blending seamlessly into pure white */
+        .hero-bg {
+            background: radial-gradient(ellipse 160% 100% at 50% 0%, 
+                #1a1c20 0%, 
+                #1a1c20 25%, 
+                #2563eb 65%,
+                #60a5fa 80%,
+                #f6f8fb 95%,
+                #ffffff 100%);
+        }
+
+        /* Video banner gradient */
+        .banner-gradient {
+            background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+        }
+
+        /* Subtle grid texture for dark cards */
+        .dark-texture {
+            background-color: #0a0b16;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        /* Footer Watermark exact styling */
+        .watermark-text {
+            font-size: 19vw;
+            font-weight: 800;
+            line-height: 0.75;
+            letter-spacing: -0.05em;
+            color: rgba(255, 255, 255, 0.03);
+            user-select: none;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        /* Dashed connecting lines animation */
+        .dash-anim {
+            stroke-dasharray: 6 6;
+            animation: dashMove 30s linear infinite;
+        }
+        @keyframes dashMove {
+            to { stroke-dashoffset: -1000; }
+        }
+        
+        /* Smooth underline transition for footer links */
+        .footer-link {
+            position: relative;
+            display: inline-block;
+        }
+        .footer-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: #ffffff;
+            transition: width 0.3s ease;
+        }
+        .footer-link:hover::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- HERO SECTION - Seamless Elliptical Blend -->
+    <section class="relative pt-6 pb-40 lg:pb-56 hero-bg overflow-visible text-white">
+        
+        <!-- NAVIGATION -->
+        <header class="max-w-[1200px] mx-auto px-6 h-20 flex items-center justify-between relative z-50">
+            <a href="#" class="flex items-center space-x-2.5 group">
+                <div class="relative w-8 h-8 flex items-center justify-center transition-transform duration-500 group-hover:rotate-180">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-white"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="M5 5l1.5 1.5"></path><path d="M17.5 17.5L19 19"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="M5 19l1.5-1.5"></path><path d="M17.5 6.5L19 5"></path></svg>
+                </div>
+                <span class="text-[22px] font-bold tracking-tight text-white">XENO CRM</span>
+            </a>
+
+            <nav class="hidden md:flex items-center space-x-8 text-[15px] font-medium text-white/80">
+                <a href="#" class="hover:text-white transition-colors">Platform</a>
+                <a href="#" class="hover:text-white transition-colors">Solutions</a>
+                <a href="#" class="hover:text-white transition-colors">Resources</a>
+                <a href="#" class="hover:text-white transition-colors">Company</a>
+            </nav>
+
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="./app/index.html" class="px-6 py-3 bg-brand-primary text-white rounded-full text-[14px] font-bold transition-all hover:bg-brand-primary/90 hover:shadow-lg transform hover:-translate-y-0.5">
+                    Open CRM Dashboard
+                </a>
+            </div>
+
+            <button class="md:hidden text-white"><i data-lucide="menu" class="w-6 h-6"></i></button>
+        </header>
+
+        <!-- HERO TEXT & CTA -->
+        <div class="max-w-[900px] mx-auto px-6 text-center mt-20 md:mt-28 relative z-10 flex flex-col items-center">
+            
+            <h1 class="text-5xl md:text-6xl lg:text-[76px] font-bold tracking-[-0.02em] text-white leading-[1.05] mb-8">
+                The AI platform for<br>customer relationships
+            </h1>
+            
+            <p class="text-lg md:text-[21px] text-white/90 max-w-[760px] mx-auto mb-12 leading-relaxed font-normal">
+                Power your teams to achieve their goals, engage with customers, and drive growth. XENO changes everything.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full md:w-auto">
+                <a href="./app/index.html" class="w-full sm:w-auto px-8 py-4 bg-white text-brand-primary rounded-full font-bold text-[15px] transition-transform hover:-translate-y-0.5 shadow-xl">
+                    Open CRM Dashboard
+                </a>
+            </div>
+        </div>
+
+
+    </section>
+
+    <!-- SECTION 1: FOR TEAMS (NETWORK GRAPHIC) -->
+    <section class="relative bg-transparent text-center z-20 -mt-24">
+        <div class="max-w-[1200px] mx-auto px-6">
+            <span class="text-brand-purple font-bold text-xs tracking-[0.2em] uppercase mb-4 block">For Teams</span>
+            <h2 class="text-3xl md:text-[42px] font-bold text-slate-900 mb-6 tracking-tight">
+                Customer relationships, understood.
+            </h2>
+            <p class="text-slate-500 max-w-[650px] mx-auto mb-20 text-[18px] leading-relaxed">
+                Speed up sales decisions with robust forecasting and scenario modeling. XENO changes everything.
+            </p>
+
+            <!-- Dashboard Mockup -->
+            <div class="relative w-full flex items-center justify-center -mt-8">
+                <img src="./Dashboard-screenshots/Dashboard-home.png" alt="CRM Dashboard" class="w-full max-w-[1050px] h-auto rounded-xl shadow-2xl border border-slate-200 transform hover:scale-[1.02] transition-transform duration-500 z-20 relative"/>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: FOR FINANCE (DASHBOARD & CHAT) -->
+    <section class="py-24 bg-white relative">
+        <div class="max-w-[1200px] mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-24">
+                <span class="text-brand-purple font-semibold text-xs tracking-[0.2em] uppercase mb-4 block">For Sales & Support</span>
+                <h2 class="text-3xl md:text-[42px] font-bold text-slate-900 mb-6 tracking-tight">
+                    Engage smarter. Close faster.
+                </h2>
+                <p class="text-slate-500 text-[18px] max-w-[650px] mx-auto leading-relaxed">
+                    A dedicated workflow to manage customer interactions. Reach out instantly using WhatsApp, SMS, Email, and more—all from one unified inbox.
+                </p>
+            </div>
+
+            <div class="max-w-[900px] mx-auto relative">
+                <!-- Inbox Mockup -->
+                <div class="bg-white rounded-[32px] border border-slate-100 shadow-premium overflow-hidden p-4 md:p-6 relative z-10 flex items-center justify-center">
+                    <img src="./Dashboard-screenshots/inbox.png" alt="CRM Inbox" class="w-full rounded-2xl shadow-lg border border-slate-100"/>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2.5: PLATFORM GALLERY -->
+    <section class="py-24 bg-brand-lightBg">
+        <div class="max-w-[1200px] mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-brand-primary font-semibold text-xs tracking-[0.2em] uppercase mb-4 block">Platform Overview</span>
+                <h2 class="text-3xl md:text-[42px] font-bold text-slate-900 mb-6 tracking-tight">Everything you need, in one place.</h2>
+                <p class="text-slate-500 text-[18px]">Explore the powerful modules built into XENO CRM.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10">
+                <!-- Card 1 -->
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex flex-col gap-5 hover:shadow-floating transition-shadow duration-300 transform hover:-translate-y-1 cursor-pointer group">
+                    <div class="overflow-hidden rounded-xl border border-slate-100">
+                        <img src="./Dashboard-screenshots/Customer_details.png" alt="Customer Details" class="w-full h-[280px] object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-xl px-2">Customer Profiles</h3>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex flex-col gap-5 hover:shadow-floating transition-shadow duration-300 transform hover:-translate-y-1 cursor-pointer group">
+                    <div class="overflow-hidden rounded-xl border border-slate-100">
+                        <img src="./Dashboard-screenshots/Segments.png" alt="Segments" class="w-full h-[280px] object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-xl px-2">Smart Segments</h3>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex flex-col gap-5 hover:shadow-floating transition-shadow duration-300 transform hover:-translate-y-1 cursor-pointer group">
+                    <div class="overflow-hidden rounded-xl border border-slate-100">
+                        <img src="./Dashboard-screenshots/Projects.png" alt="Projects" class="w-full h-[280px] object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-xl px-2">Project Management</h3>
+                </div>
+                <!-- Card 4 -->
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex flex-col gap-5 hover:shadow-floating transition-shadow duration-300 transform hover:-translate-y-1 cursor-pointer group">
+                    <div class="overflow-hidden rounded-xl border border-slate-100">
+                        <img src="./Dashboard-screenshots/Product_details.png" alt="Product Details" class="w-full h-[280px] object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-xl px-2">Product Catalog</h3>
+                </div>
+                <!-- Card 5 -->
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex flex-col gap-5 hover:shadow-floating transition-shadow duration-300 transform hover:-translate-y-1 cursor-pointer group">
+                    <div class="overflow-hidden rounded-xl border border-slate-100">
+                        <img src="./Dashboard-screenshots/AI-Assistant.png" alt="AI Assistant" class="w-full h-[280px] object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-xl px-2">AI Assistant</h3>
+                </div>
+                <!-- Card 6 -->
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex flex-col gap-5 hover:shadow-floating transition-shadow duration-300 transform hover:-translate-y-1 cursor-pointer group">
+                    <div class="overflow-hidden rounded-xl border border-slate-100">
+                        <img src="./Dashboard-screenshots/Campaings.png" alt="Campaigns" class="w-full h-[280px] object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-xl px-2">Marketing Campaigns</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: 4-CARD FEATURE GRID -->
+    <section class="py-20 bg-white pb-32">
+        <div class="max-w-[1200px] mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- Grid Card 1 -->
+            <div class="bg-brand-lightBg rounded-[32px] p-10 lg:p-12 flex flex-col justify-between hover:shadow-floating transition-shadow duration-300">
+                <div class="mb-12">
+                    <h3 class="text-[24px] font-bold text-slate-900 mb-4 tracking-tight">Omni-channel Unified Inbox</h3>
+                    <p class="text-[16px] text-slate-500 leading-relaxed">Centralize WhatsApp, Email, SMS, and RCS messages in a single, collaborative inbox to engage with customers in real-time.</p>
+                </div>
+                <div class="bg-white rounded-[24px] border border-slate-100 p-6 shadow-sm">
+                    <div class="h-32 flex items-end gap-3 justify-between px-2">
+                        <div class="w-full bg-indigo-50 rounded-t-lg h-[30%]"></div>
+                        <div class="w-full bg-indigo-100 rounded-t-lg h-[50%]"></div>
+                        <div class="w-full bg-indigo-200 rounded-t-lg h-[40%]"></div>
+                        <div class="w-full bg-indigo-300 rounded-t-lg h-[75%]"></div>
+                        <div class="w-full bg-brand-primary rounded-t-lg h-[95%] shadow-glow"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid Card 2 -->
+            <div class="bg-brand-lightBg rounded-[32px] p-10 lg:p-12 flex flex-col justify-between hover:shadow-floating transition-shadow duration-300">
+                <div class="mb-12">
+                    <h3 class="text-[24px] font-bold text-slate-900 mb-4 tracking-tight">AI-Powered Segmentation</h3>
+                    <p class="text-[16px] text-slate-500 leading-relaxed">Use natural language queries to instantly segment your audience based on behavior, purchases, and demographics.</p>
+                </div>
+                <div class="bg-white rounded-[24px] border border-slate-100 p-6 shadow-sm flex items-center justify-center h-[180px]">
+                    <div class="relative w-[120px] h-[120px] rounded-full border-[12px] border-slate-50 flex items-center justify-center border-t-brand-primary border-r-brand-primary border-b-brand-primary transform rotate-45 shadow-inner">
+                        <div class="transform -rotate-45 text-[28px] font-bold text-slate-900 tracking-tight">75%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid Card 3 -->
+            <div class="bg-brand-lightBg rounded-[32px] p-10 lg:p-12 flex flex-col justify-between hover:shadow-floating transition-shadow duration-300">
+                <div class="mb-12">
+                    <h3 class="text-[24px] font-bold text-slate-900 mb-4 tracking-tight">Intelligent Campaigns</h3>
+                    <p class="text-[16px] text-slate-500 leading-relaxed">Deploy targeted campaigns across multiple channels and monitor open rates, click-throughs, and conversions automatically.</p>
+                </div>
+                <div class="bg-white rounded-[24px] border border-slate-100 p-6 shadow-sm h-[180px] flex flex-col justify-center">
+                    <div class="flex items-center gap-3.5 p-4 bg-emerald-50 border border-emerald-100 rounded-xl mb-5">
+                        <div class="bg-emerald-100 p-1.5 rounded-full"><i data-lucide="trending-up" class="w-4 h-4 text-emerald-600"></i></div>
+                        <div class="text-[14px] font-bold text-emerald-900">Summer Sale reached 12% conversion</div>
+                    </div>
+                    <div class="h-2.5 w-full bg-slate-100 rounded-full mb-3.5"></div>
+                    <div class="h-2.5 w-2/3 bg-slate-100 rounded-full"></div>
+                </div>
+            </div>
+
+            <!-- Grid Card 4 -->
+            <div class="bg-brand-lightBg rounded-[32px] p-10 lg:p-12 flex flex-col justify-between hover:shadow-floating transition-shadow duration-300">
+                <div class="mb-12">
+                    <h3 class="text-[24px] font-bold text-slate-900 mb-4 tracking-tight">360° Customer View</h3>
+                    <p class="text-[16px] text-slate-500 leading-relaxed">Get a comprehensive view of customer interactions, purchase history, and lifetime value without manual spreadsheets.</p>
+                </div>
+                <div class="bg-white rounded-[24px] border border-slate-100 p-5 shadow-sm grid grid-cols-2 gap-4 h-[180px]">
+                    <div class="text-center p-4 bg-slate-50 rounded-2xl flex flex-col justify-center border border-slate-100">
+                        <div class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1.5">Customers</div>
+                        <div class="text-[22px] font-bold text-slate-900">1,842</div>
+                    </div>
+                    <div class="text-center p-4 bg-slate-50 rounded-2xl flex flex-col justify-center border border-slate-100">
+                        <div class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1.5">Campaigns</div>
+                        <div class="text-[22px] font-bold text-slate-900">12</div>
+                    </div>
+                    <div class="text-center p-3 bg-slate-50 rounded-2xl col-span-2 flex flex-col justify-center border border-slate-100">
+                        <div class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Total Revenue Generated</div>
+                        <div class="text-[24px] font-bold text-brand-primary tracking-tight">$142,500</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 4: RESULTS (DARK THEME) -->
+    <section class="py-12 bg-white pb-24">
+        <div class="max-w-[1200px] mx-auto px-6">
+            <div class="dark-texture text-white rounded-[40px] p-12 md:p-16 lg:p-24 relative overflow-hidden flex flex-col lg:flex-row gap-16 items-center justify-between border border-brand-cardBorder shadow-floating">
+                
+                <!-- Background Glow -->
+                <div class="absolute -top-40 -right-40 w-[600px] h-[600px] bg-brand-primary/20 rounded-full blur-[100px] pointer-events-none"></div>
+
+                <div class="lg:w-1/2 relative z-10">
+                    <span class="text-white bg-white/10 px-3.5 py-1.5 rounded-md text-[11px] font-bold tracking-widest uppercase mb-8 inline-block border border-white/10">Results</span>
+                    <h2 class="text-[36px] md:text-[48px] font-bold text-white mb-6 tracking-tight leading-[1.15]">
+                        Prove marketing success and impact on bottom line
+                    </h2>
+                    <p class="text-slate-300 text-[18px] leading-relaxed mb-10 pr-0 lg:pr-10">
+                        A central source of truth for your customer relationships allows you to identify high-value segments instantly and drive significant revenue growth while building brand loyalty.
+                    </p>
+                    <a href="./app/index.html" class="px-6 py-3.5 bg-transparent hover:bg-white/10 text-white rounded-full text-[15px] font-semibold transition-all border border-white/20 inline-flex items-center gap-2">
+                        Read case study <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+
+                <div class="lg:w-1/2 relative z-10 w-full lg:pl-12">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-16">
+                        <div class="border-l-[3px] border-brand-primary pl-6">
+                            <div class="text-[52px] font-bold text-white mb-1 tracking-tight leading-none">3x</div>
+                            <div class="text-[16px] text-slate-400 font-medium mt-2">Increase in engagement</div>
+                        </div>
+                        <div class="border-l-[3px] border-[#a855f7] pl-6">
+                            <div class="text-[52px] font-bold text-white mb-1 tracking-tight leading-none">25%</div>
+                            <div class="text-[16px] text-slate-400 font-medium mt-2">Higher conversion rate</div>
+                        </div>
+                        <div class="border-l-[3px] border-[#10b981] pl-6 sm:col-span-2">
+                            <div class="text-[52px] font-bold text-white mb-1 tracking-tight leading-none">40%</div>
+                            <div class="text-[16px] text-slate-400 font-medium mt-2">Reduction in customer churn</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: TESTIMONIAL -->
+    <section class="py-24 bg-white">
+        <div class="max-w-[960px] mx-auto px-6 text-center">
+            <p class="text-[28px] md:text-[36px] font-medium text-slate-900 leading-[1.35] mb-14 tracking-[-0.02em]">
+                "XENO has completely changed how I operate. It gives me exact, action-oriented information I need at my fingertips to confidently engage with customers and drive sales, ultimately driving growth across the entire business."
+            </p>
+
+        </div>
+    </section>
+
+    <!-- SECTION 6: SECURITY (DARK THEME) -->
+    <section class="py-12 bg-white pb-24">
+        <div class="max-w-[1200px] mx-auto px-6">
+            <div class="dark-texture text-white rounded-[40px] p-12 md:p-16 lg:p-24 relative overflow-hidden flex flex-col lg:flex-row gap-16 items-center justify-between border border-brand-cardBorder shadow-floating">
+                
+                <div class="lg:w-5/12 relative z-10 pr-0 lg:pr-10">
+                    <span class="text-white bg-white/10 px-3.5 py-1.5 rounded-md text-[11px] font-bold tracking-widest uppercase mb-8 inline-block border border-white/10">Security</span>
+                    <h2 class="text-[36px] md:text-[48px] font-bold text-white mb-8 tracking-tight leading-[1.15]">
+                        Your data is secure and ready for enterprise scale.
+                    </h2>
+                    <ul class="space-y-5 text-[17px] text-slate-300 font-medium mb-12">
+                        <li class="flex items-center gap-4"><i data-lucide="check-circle-2" class="w-6 h-6 text-brand-purple"></i> SOC 2 Type II Certified</li>
+                        <li class="flex items-center gap-4"><i data-lucide="check-circle-2" class="w-6 h-6 text-brand-purple"></i> Strict GDPR Data Compliance</li>
+                        <li class="flex items-center gap-4"><i data-lucide="check-circle-2" class="w-6 h-6 text-brand-purple"></i> Enterprise-grade Access Controls</li>
+                    </ul>
+                    <a href="#" class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white rounded-full text-[15px] font-semibold transition-all border border-white/20 inline-block backdrop-blur-md">
+                        Learn more
+                    </a>
+                </div>
+
+                <div class="lg:w-1/2 relative z-10 w-full lg:pl-16">
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="bg-[#0a0b16] border border-white/10 p-12 rounded-[28px] flex items-center justify-center aspect-square shadow-lg">
+                            <i data-lucide="shield" class="w-14 h-14 text-slate-400" stroke-width="1.5"></i>
+                        </div>
+                        <div class="bg-[#0a0b16] border border-white/10 p-12 rounded-[28px] flex items-center justify-center aspect-square shadow-lg">
+                            <i data-lucide="lock" class="w-14 h-14 text-slate-400" stroke-width="1.5"></i>
+                        </div>
+                        <div class="bg-[#0a0b16] border border-white/10 p-12 rounded-[28px] flex items-center justify-center aspect-square shadow-lg">
+                            <div class="text-center font-bold text-slate-400 text-[26px] tracking-[0.1em]">GDPR</div>
+                        </div>
+                        <div class="bg-[#0a0b16] border border-white/10 p-12 rounded-[28px] flex items-center justify-center aspect-square shadow-lg">
+                            <div class="text-center font-bold text-slate-400 text-[26px] tracking-wide">SOC 2</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 7: VIDEO CTA BANNER WITH DASHBOARD UI MOCKUP -->
+    <section class="py-12 bg-white">
+        <div class="max-w-[1200px] mx-auto px-6">
+            <div class="banner-gradient rounded-[40px] pl-12 pt-12 md:pl-20 md:pt-20 text-white flex flex-col md:flex-row justify-between relative overflow-hidden shadow-floating">
+                
+                <!-- Left Content -->
+                <div class="relative z-10 md:w-1/2 text-left pb-12 md:pb-20 pr-6">
+                    <h2 class="text-[40px] md:text-[46px] font-bold mb-10 tracking-tight leading-[1.1]">See how XENO CRM works.</h2>
+                    <a href="./app/index.html" class="px-8 py-4 bg-white text-brand-primary rounded-full text-[15px] font-bold transition-transform hover:scale-105 inline-block shadow-xl">
+                        Open CRM Dashboard
+                    </a>
+                </div>
+
+                <!-- Right UI Mockup -->
+                <div class="relative z-10 md:w-1/2 flex justify-end items-end h-full mt-8 md:mt-0 p-8 pb-0">
+                    <img src="./Dashboard-screenshots/Campaings.png" alt="Campaign Dashboard" class="w-[120%] md:w-[150%] max-w-none rounded-tl-xl shadow-2xl relative right-[-5%] bottom-[-20px]"/>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 8: FAQ -->
+    <section class="py-24 bg-white border-t border-slate-100 mt-16">
+        <div class="max-w-[1200px] mx-auto px-6 flex flex-col md:flex-row gap-16 lg:gap-32">
+            <div class="md:w-[35%]">
+                <span class="text-brand-purple font-semibold text-xs tracking-[0.2em] uppercase mb-4 block">FAQ</span>
+                <h2 class="text-[36px] font-bold text-slate-900 tracking-tight leading-tight mb-6">Why choose XENO CRM?</h2>
+                <p class="text-slate-500 text-[18px] leading-relaxed">
+                    The platform designed specifically to bridge the gap between sales, marketing, and customer success.
+                </p>
+            </div>
+            
+            <div class="md:w-[65%] border-t border-slate-200 faq-container">
+                <div class="border-b border-slate-200 faq-item">
+                    <button class="w-full py-8 flex items-center justify-between text-left focus:outline-none group faq-button">
+                        <span class="text-[20px] font-bold text-slate-800 group-hover:text-brand-primary transition-colors tracking-tight">A single source of truth for all customer data</span>
+                        <i data-lucide="plus" class="w-6 h-6 text-slate-400 group-hover:text-brand-primary transition-transform duration-300 transform faq-icon"></i>
+                    </button>
+                    <div class="faq-answer hidden pb-8 text-slate-500 text-[18px] leading-relaxed pr-8">
+                        XENO centralizes your contact details, interaction history, and custom data points into a single, comprehensive view. No more hunting for information across disparate tools.
+                    </div>
+                </div>
+                <div class="border-b border-slate-200 faq-item">
+                    <button class="w-full py-8 flex items-center justify-between text-left focus:outline-none group faq-button">
+                        <span class="text-[20px] font-bold text-slate-800 group-hover:text-brand-primary transition-colors tracking-tight">Drive accountability with individual departments</span>
+                        <i data-lucide="plus" class="w-6 h-6 text-slate-400 group-hover:text-brand-primary transition-transform duration-300 transform faq-icon"></i>
+                    </button>
+                    <div class="faq-answer hidden pb-8 text-slate-500 text-[18px] leading-relaxed pr-8">
+                        Our permission-based workspaces allow teams to collaborate transparently. Assign tasks, track progress, and ensure every department has ownership over their customer relationships.
+                    </div>
+                </div>
+                <div class="border-b border-slate-200 faq-item">
+                    <button class="w-full py-8 flex items-center justify-between text-left focus:outline-none group faq-button">
+                        <span class="text-[20px] font-bold text-slate-800 group-hover:text-brand-primary transition-colors tracking-tight">Easily identify savings</span>
+                        <i data-lucide="plus" class="w-6 h-6 text-slate-400 group-hover:text-brand-primary transition-transform duration-300 transform faq-icon"></i>
+                    </button>
+                    <div class="faq-answer hidden pb-8 text-slate-500 text-[18px] leading-relaxed pr-8">
+                        Through advanced analytics and reporting, XENO highlights inefficiencies in your sales pipeline and marketing spend, helping you optimize resources for maximum ROI.
+                    </div>
+                </div>
+                <div class="border-b border-slate-200 faq-item">
+                    <button class="w-full py-8 flex items-center justify-between text-left focus:outline-none group faq-button">
+                        <span class="text-[20px] font-bold text-slate-800 group-hover:text-brand-primary transition-colors tracking-tight">Provide real-time visibility into metrics</span>
+                        <i data-lucide="plus" class="w-6 h-6 text-slate-400 group-hover:text-brand-primary transition-transform duration-300 transform faq-icon"></i>
+                    </button>
+                    <div class="faq-answer hidden pb-8 text-slate-500 text-[18px] leading-relaxed pr-8">
+                        Customizable dashboards give your team instant access to critical KPIs. Monitor open rates, conversion metrics, and revenue growth as they happen.
+                    </div>
+                </div>
+                <div class="border-b border-slate-200 faq-item">
+                    <button class="w-full py-8 flex items-center justify-between text-left focus:outline-none group faq-button">
+                        <span class="text-[20px] font-bold text-slate-800 group-hover:text-brand-primary transition-colors tracking-tight">With robust AI backing your process</span>
+                        <i data-lucide="plus" class="w-6 h-6 text-slate-400 group-hover:text-brand-primary transition-transform duration-300 transform faq-icon"></i>
+                    </button>
+                    <div class="faq-answer hidden pb-8 text-slate-500 text-[18px] leading-relaxed pr-8">
+                        XENO's integrated AI assistant helps you draft campaigns, segment audiences intelligently, and even predict customer needs before they arise.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 9: PRE-FOOTER CTA -->
+    <section class="pt-24 pb-20 bg-white text-center">
+        <div class="max-w-[760px] mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl lg:text-[64px] font-bold text-slate-900 mb-8 tracking-tight leading-[1.05]">
+                Cut costs. Enforce policy.<br>Recover time.
+            </h2>
+            <p class="text-slate-500 text-[20px] mb-12 font-normal">
+                Join the most innovative companies managing customer relationships and sales seamlessly.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
+                <input type="email" placeholder="Enter corporate email" class="w-full sm:w-[340px] px-6 py-4 rounded-full bg-white border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-[16px] shadow-sm">
+                <button class="w-full sm:w-auto shrink-0 px-10 py-4 bg-brand-primary hover:bg-[#4338ca] text-white rounded-full font-bold text-[16px] transition-all shadow-glow hover:-translate-y-0.5">
+                    Book a demo
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-brand-navy pt-24 pb-12 relative overflow-hidden mt-0 border-t-0">
+        <!-- Giant Faded Background Watermark matched precisely to screenshot -->
+        <div class="absolute bottom-[-6%] left-1/2 transform -translate-x-1/2 z-0 w-full text-center pointer-events-none">
+            <div class="watermark-text">XENO</div>
+        </div>
+
+        <div class="max-w-[1200px] mx-auto px-6 relative z-10">
+            <div class="grid grid-cols-2 md:grid-cols-6 gap-x-8 gap-y-12 mb-32">
+                
+                <!-- Logo Col -->
+                <div class="col-span-2 pr-10">
+                    <a href="#" class="flex items-center space-x-2.5 mb-6">
+                        <div class="relative w-7 h-7 flex items-center justify-center text-white">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="M5 5l1.5 1.5"></path><path d="M17.5 17.5L19 19"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="M5 19l1.5-1.5"></path><path d="M17.5 6.5L19 5"></path></svg>
+                        </div>
+                        <span class="text-[20px] font-bold tracking-tight text-white">XENO CRM</span>
+                    </a>
+                </div>
+
+                <!-- Links Cols -->
+                <div>
+                    <h4 class="text-white text-[12px] font-bold tracking-[0.1em] uppercase mb-6">Product</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-[15px] text-slate-400 font-medium footer-link hover:text-white">Platform</a></li>
+                        <li><a href="#" class="text-[15px] text-slate-400 font-medium footer-link hover:text-white">Integrations</a></li>
+                        <li><a href="#" class="text-[15px] text-slate-400 font-medium footer-link hover:text-white">Security</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white text-[12px] font-bold tracking-[0.1em] uppercase mb-6">Solutions</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-[15px] text-slate-400 font-medium footer-link hover:text-white">For Finance</a></li>
+                        <li><a href="#" class="text-[15px] text-slate-400 font-medium footer-link hover:text-white">For Sustainability</a></li>
+                        <li><a href="#" class="text-[15px] text-slate-400 font-medium footer-link hover:text-white">For Operations</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white text-[12px] font-bold tracking-[0.1em] uppercase mb-6">Resources</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-[15px] text-slate-400 font-medium footer-link hover:text-white">Blog</a></li>
+                        <li><a href="#" class="text-[15px] text-slate-400 font-medium footer-link hover:text-white">Case Studies</a></li>
+                        <li><a href="#" class="text-[15px] text-slate-400 font-medium footer-link hover:text-white">Help Center</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white text-[12px] font-bold tracking-[0.1em] uppercase mb-6">Company</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-[15px] text-slate-400 font-medium footer-link hover:text-white">About Us</a></li>
+                        <li><a href="#" class="text-[15px] text-slate-400 font-medium footer-link hover:text-white">Careers</a></li>
+                        <li><a href="#" class="text-[15px] text-slate-400 font-medium footer-link hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6 text-[15px]">
+                <div class="flex flex-wrap items-center gap-6 text-slate-400 font-medium">
+                    <span>&copy; 2026 XENO CRM.</span>
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                </div>
+                
+                <div class="flex items-center space-x-6">
+                    <a href="#" class="text-slate-400 hover:text-white transition-colors"><i data-lucide="twitter" class="w-5 h-5 fill-current"></i></a>
+                    <a href="#" class="text-slate-400 hover:text-white transition-colors"><i data-lucide="linkedin" class="w-5 h-5 fill-current"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Init Lucide Icons
+        lucide.createIcons();
+
+        // FAQ Accordion Logic
+        document.querySelectorAll('.faq-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpen = !answer.classList.contains('hidden');
+
+                // Close all other answers
+                document.querySelectorAll('.faq-answer').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.faq-icon').forEach(el => el.style.transform = 'rotate(0deg)');
+
+                // Toggle current answer
+                if (!isOpen) {
+                    answer.classList.remove('hidden');
+                    icon.style.transform = 'rotate(45deg)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
