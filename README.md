@@ -29,6 +29,36 @@ Here is how the product helps users:
 
 ---
 
+## Platform Showcase
+
+Here is a look at the different modules available in the XENO CRM:
+
+**Main Dashboard & Analytics**
+<img src="front%20end/public/Dashboard-screenshots/Dashboard-home.png" alt="CRM Dashboard" width="100%" />
+
+**Intelligent Customer Segments**
+<img src="front%20end/public/Dashboard-screenshots/Segments.png" alt="Segments" width="100%" />
+
+**Multi-Channel Campaign Dispatch**
+<img src="front%20end/public/Dashboard-screenshots/Campaings.png" alt="Campaigns" width="100%" />
+
+**Unified Inbox & Smart Replies**
+<img src="front%20end/public/Dashboard-screenshots/inbox.png" alt="Inbox" width="100%" />
+
+**Conversational AI Assistant**
+<img src="front%20end/public/Dashboard-screenshots/AI-Assistant.png" alt="AI Assistant" width="100%" />
+
+**Customer Profiles**
+<img src="front%20end/public/Dashboard-screenshots/Customer_details.png" alt="Customer Details" width="100%" />
+
+**Product Catalog**
+<img src="front%20end/public/Dashboard-screenshots/Product_details.png" alt="Product Catalog" width="100%" />
+
+**Project Tracking**
+<img src="front%20end/public/Dashboard-screenshots/Projects.png" alt="Project Tracking" width="100%" />
+
+---
+
 ## Current Running State
 
 > **Backend is halted** — Right now, ports 8000/8001 are occupied by other running processes on the system. **Only the frontend is currently active** and available at `http://localhost:5173`.
@@ -97,6 +127,8 @@ I'm actually really proud of this part. The application's LaunchPage isn't just 
 - **Quotable**: I made sure to include comprehensive meta descriptions, rich body content, and a dedicated FAQ section to make the site easily extractable and citable by LLMs.
 - **Understandable**: The site uses a clean heading hierarchy, Organization JSON-LD structured data, and Open Graph tags to help bots deeply understand the semantics of the page.
 - **Trustworthy**: I added a dedicated `/llms.txt` file (which is quickly becoming the standard for AI-readable site documentation), alongside contextual internal links and external citations to authoritative industry sources.
+
+<img src="AEO_RESULT.png" alt="AEO Perfect Score Result" width="100%" />
 
 ---
 
