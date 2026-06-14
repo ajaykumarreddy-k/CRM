@@ -1,7 +1,18 @@
-import { Search, Plus } from "lucide-react"
+import { Search, Plus, LogOut } from "lucide-react"
 import { showToast } from "@/src/lib/toast"
+import { useAuth } from "@/src/lib/auth"
+import { useNavigate } from "react-router-dom"
 
 export function Topbar() {
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    logout()
+    showToast("Signed out successfully", "success")
+    navigate("/login")
+  }
+
   return (
     <header className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 w-full">
       <div className="flex items-center gap-4 md:gap-5 w-full md:w-auto justify-between md:justify-start">
@@ -33,9 +44,9 @@ export function Topbar() {
           <div className="w-8 h-8 rounded-full border-2 border-[#10b981] overflow-hidden bg-background relative z-20">
             <img src="https://i.pravatar.cc/100?img=47" alt="User 3" className="w-full h-full object-cover" />
           </div>
-          <button 
+          <button
             onClick={() => showToast("Invite Client feature coming soon!", "info")}
-            className="w-9 h-9 rounded-full border border-subtle bg-surface hover:bg-background flex items-center justify-center text-muted hover:text-primary transition-all shadow-sm ml-2 relative z-30 text-[16px] font-bold" 
+            className="w-9 h-9 rounded-full border border-subtle bg-surface hover:bg-background flex items-center justify-center text-muted hover:text-primary transition-all shadow-sm ml-2 relative z-30 text-[16px] font-bold"
             title="Invite Client"
           >
             +
@@ -44,16 +55,28 @@ export function Topbar() {
       </div>
 
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-5 w-full md:w-auto">
-         {/* User Profile Pill */}
-         <div className="flex items-center gap-3 bg-surface pl-1.5 pr-6 py-1.5 rounded-full shadow-[0_2px_10px_rgba(0,0,0,0.02)] cursor-pointer hover:shadow-[0_4px_15px_rgba(0,0,0,0.04)] transition-shadow">
-           <button className="w-9 h-9 rounded-full border border-subtle flex items-center justify-center text-muted hover:bg-background bg-[#fdfdfd] shrink-0">
-              <Plus size={16} />
-           </button>
-           <img src="https://i.pravatar.cc/150?img=11" alt="User" className="w-9 h-9 rounded-full object-cover border border-subtle shrink-0" />
-           <div className="leading-tight ml-1">
-             <p className="font-bold text-[13px]">Dwayne Tatum</p>
-             <p className="text-[11px] text-muted font-medium">Marketing Admin</p>
-           </div>
+        {/* User Profile Pill with logout */}
+        <div className="flex items-center gap-3 bg-surface pl-1.5 pr-3 py-1.5 rounded-full shadow-[0_2px_10px_rgba(0,0,0,0.02)] cursor-pointer hover:shadow-[0_4px_15px_rgba(0,0,0,0.04)] transition-shadow group">
+          <button className="w-9 h-9 rounded-full border border-subtle flex items-center justify-center text-muted hover:bg-background bg-[#fdfdfd] shrink-0">
+            <Plus size={16} />
+          </button>
+          <img
+            src={user?.avatar || "https://i.pravatar.cc/150?img=11"}
+            alt="User"
+            className="w-9 h-9 rounded-full object-cover border border-subtle shrink-0"
+          />
+          <div className="leading-tight ml-1">
+            <p className="font-bold text-[13px]">{user?.name || "CRM User"}</p>
+            <p className="text-[11px] text-muted font-medium">{user?.role || "Marketing Admin"}</p>
+          </div>
+          {/* Logout button — appears on hover */}
+          <button
+            onClick={handleLogout}
+            title="Sign out"
+            className="w-8 h-8 rounded-full flex items-center justify-center text-muted hover:text-[#ec5c48] hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100 ml-1 shrink-0"
+          >
+            <LogOut size={14} />
+          </button>
         </div>
 
         {/* Search Pill */}
@@ -61,9 +84,9 @@ export function Topbar() {
           <div className="w-9 h-9 bg-surface border border-subtle rounded-full flex items-center justify-center shadow-sm group-focus-within:border-subtle transition-colors shrink-0">
             <Search size={16} className="text-muted group-focus-within:text-accent" />
           </div>
-          <input 
-            type="text" 
-            placeholder="Start searching here ..." 
+          <input
+            type="text"
+            placeholder="Start searching here ..."
             className="pl-3 bg-transparent border-none outline-none text-[13px] text-primary w-full font-medium placeholder:text-muted"
           />
         </div>

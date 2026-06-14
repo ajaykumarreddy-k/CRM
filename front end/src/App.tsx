@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import { useState, useEffect, Component, ReactNode } from "react"
 import { CheckCircle2, AlertCircle, Info, AlertTriangle } from "lucide-react"
+import { AuthProvider, ProtectedRoute } from "./lib/auth"
 import { Sidebar } from "./components/layout/Sidebar"
 import { Topbar } from "./components/layout/Topbar"
 import Dashboard from "./app/dashboard/page"
@@ -14,6 +15,7 @@ import AIChat from "./app/ai/page"
 import Products from "./app/products/page"
 import Projects from "./app/projects/page"
 import Inbox from "./app/inbox/page"
+import AuthPage from "./app/auth/page"
 
 class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean; error: Error | null }> {
   constructor(props: { children: ReactNode }) {
@@ -94,27 +96,44 @@ function Layout({ children }: { children: React.ReactNode }) {
   )
 }
 
+// ── CRM app — all routes require authentication ────────────────────────────────
+function CRMApp() {
+  return (
+    <ProtectedRoute>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/customers" element={<Customers />} />
+          <Route path="/segments" element={<Segments />} />
+          <Route path="/segments/new" element={<SegmentBuilder />} />
+          <Route path="/segments/:id" element={<SegmentBuilder />} />
+          <Route path="/campaigns" element={<Campaigns />} />
+          <Route path="/campaigns/new" element={<NewCampaign />} />
+          <Route path="/campaigns/:id" element={<CampaignStats />} />
+          <Route path="/ai" element={<AIChat />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/inbox" element={<Inbox />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Layout>
+    </ProtectedRoute>
+  )
+}
+
 export default function App() {
   return (
     <ErrorBoundary>
       <BrowserRouter>
-        <Layout>
+        <AuthProvider>
           <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/customers" element={<Customers />} />
-            <Route path="/segments" element={<Segments />} />
-            <Route path="/segments/new" element={<SegmentBuilder />} />
-            <Route path="/segments/:id" element={<SegmentBuilder />} />
-            <Route path="/campaigns" element={<Campaigns />} />
-            <Route path="/campaigns/new" element={<NewCampaign />} />
-            <Route path="/campaigns/:id" element={<CampaignStats />} />
-            <Route path="/ai" element={<AIChat />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/inbox" element={<Inbox />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
+            {/* Public routes */}
+            <Route path="/login" element={<AuthPage />} />
+
+            {/* All other routes are protected (CRM App) */}
+            <Route path="/*" element={<CRMApp />} />
           </Routes>
-        </Layout>
+        </AuthProvider>
       </BrowserRouter>
     </ErrorBoundary>
   )
