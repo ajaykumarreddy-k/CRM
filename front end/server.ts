@@ -213,16 +213,10 @@ const statsCache: Record<string, { sent: number, delivered: number, opened: numb
 const app = express();
 app.use(express.json());
 
-// Normalize req.url to always start with /api to handle Vercel's path stripping
-app.use((req, res, next) => {
-  if (req.url && !req.url.startsWith('/api')) {
-    req.url = '/api' + (req.url.startsWith('/') ? req.url : '/' + req.url);
-  }
-  next();
-});
+const apiRouter = express.Router();
 
 // -- API ROUTES --
-  app.get("/api/dashboard/summary", (req, res) => {
+  apiRouter.get("/dashboard/summary", (req, res) => {
     const totalSent = mockDb.campaigns.reduce((acc, c) => acc + c.sent, 0);
     res.json({
       metrics: { 
@@ -249,17 +243,17 @@ app.use((req, res, next) => {
     });
   });
 
-  app.get("/api/customers", (req, res) => res.json(mockDb.customers));
+  apiRouter.get("/customers", (req, res) => res.json(mockDb.customers));
   
-  app.get("/api/segments", (req, res) => res.json(mockDb.segments));
+  apiRouter.get("/segments", (req, res) => res.json(mockDb.segments));
   
-  app.get("/api/segments/:id", (req, res) => {
+  apiRouter.get("/segments/:id", (req, res) => {
     const segment = mockDb.segments.find(s => s.id === req.params.id);
     if (!segment) return res.status(404).json({ error: "Segment not found" });
     res.json(segment);
   });
 
-  app.post("/api/segments", (req, res) => {
+  apiRouter.post("/segments", (req, res) => {
     const { name, rules } = req.body;
     const matched = mockDb.customers.filter(c => evaluateRules(c, rules));
     const newSegment = {
@@ -273,7 +267,7 @@ app.use((req, res, next) => {
     res.json(newSegment);
   });
 
-  app.post("/api/segments/preview", (req, res) => {
+  apiRouter.post("/segments/preview", (req, res) => {
     const { rules } = req.body;
     const matched = mockDb.customers.filter(c => evaluateRules(c, rules));
     res.json({
@@ -283,15 +277,15 @@ app.use((req, res, next) => {
   });
 
 
-  app.get("/api/products", (req, res) => res.json(mockDb.products));
+  apiRouter.get("/products", (req, res) => res.json(mockDb.products));
   
-  app.get("/api/products/:id", (req, res) => {
+  apiRouter.get("/products/:id", (req, res) => {
     const product = mockDb.products.find(p => p.id === req.params.id);
     if (!product) return res.status(404).json({ error: "Product not found" });
     res.json(product);
   });
 
-  app.post("/api/products", (req, res) => {
+  apiRouter.post("/products", (req, res) => {
     const { name, category, price, stock, description } = req.body;
     const newProduct = {
       id: String(mockDb.products.length + 1),
@@ -307,7 +301,7 @@ app.use((req, res, next) => {
     res.json(newProduct);
   });
 
-  app.put("/api/products/:id", (req, res) => {
+  apiRouter.put("/products/:id", (req, res) => {
     const productIndex = mockDb.products.findIndex(p => p.id === req.params.id);
     if (productIndex === -1) return res.status(404).json({ error: "Product not found" });
     
@@ -323,7 +317,7 @@ app.use((req, res, next) => {
     res.json(mockDb.products[productIndex]);
   });
 
-  app.delete("/api/products/:id", (req, res) => {
+  apiRouter.delete("/products/:id", (req, res) => {
     const productIndex = mockDb.products.findIndex(p => p.id === req.params.id);
     if (productIndex === -1) return res.status(404).json({ error: "Product not found" });
     const deleted = mockDb.products.splice(productIndex, 1);
@@ -331,11 +325,11 @@ app.use((req, res, next) => {
   });
 
   // -- PROJECTS REST API --
-  app.get("/api/projects", (req, res) => {
+  apiRouter.get("/projects", (req, res) => {
     res.json(mockDb.projects || []);
   });
 
-  app.post("/api/projects", (req, res) => {
+  apiRouter.post("/projects", (req, res) => {
     const { clientName, clientEmail, projectName, projectDesc, dueDate, contractValue, status, notes } = req.body;
     const randomImgNum = Math.floor(Math.random() * 70) + 1;
     const clientAvatar = `https://i.pravatar.cc/100?img=${randomImgNum}`;
@@ -358,7 +352,7 @@ app.use((req, res, next) => {
     res.json(newProject);
   });
 
-  app.put("/api/projects/:id", (req, res) => {
+  apiRouter.put("/projects/:id", (req, res) => {
     const projectIndex = mockDb.projects.findIndex(p => p.id === req.params.id);
     if (projectIndex === -1) return res.status(404).json({ error: "Project not found" });
     
@@ -381,7 +375,7 @@ app.use((req, res, next) => {
     res.json(mockDb.projects[projectIndex]);
   });
 
-  app.delete("/api/projects/:id", (req, res) => {
+  apiRouter.delete("/projects/:id", (req, res) => {
     const projectIndex = mockDb.projects.findIndex(p => p.id === req.params.id);
     if (projectIndex === -1) return res.status(404).json({ error: "Project not found" });
     const deleted = mockDb.projects.splice(projectIndex, 1);
@@ -389,11 +383,11 @@ app.use((req, res, next) => {
   });
 
   // -- INBOX REST API --
-  app.get("/api/inbox", (req, res) => {
+  apiRouter.get("/inbox", (req, res) => {
     res.json(mockDb.inbox || []);
   });
 
-  app.post("/api/inbox/:contactId/messages", (req, res) => {
+  apiRouter.post("/inbox/:contactId/messages", (req, res) => {
     const contact = mockDb.inbox.find(c => c.id === req.params.contactId);
     if (!contact) return res.status(404).json({ error: "Contact not found" });
     
@@ -415,14 +409,14 @@ app.use((req, res, next) => {
     res.json(newMessage);
   });
 
-  app.put("/api/inbox/:contactId/read", (req, res) => {
+  apiRouter.put("/inbox/:contactId/read", (req, res) => {
     const contact = mockDb.inbox.find(c => c.id === req.params.contactId);
     if (!contact) return res.status(404).json({ error: "Contact not found" });
     contact.unreadCount = 0;
     res.json({ success: true });
   });
 
-  app.post("/api/ai/inbox-draft", async (req, res) => {
+  apiRouter.post("/ai/inbox-draft", async (req, res) => {
     try {
       const { conversationHistory, contactName } = req.body;
       const response = await ai.models.generateContent({
@@ -439,15 +433,15 @@ app.use((req, res, next) => {
     }
   });
 
-  app.get("/api/campaigns", (req, res) => res.json(mockDb.campaigns));
+  apiRouter.get("/campaigns", (req, res) => res.json(mockDb.campaigns));
 
-  app.get("/api/campaigns/:id", (req, res) => {
+  apiRouter.get("/campaigns/:id", (req, res) => {
     const campaign = mockDb.campaigns.find(c => c.id === req.params.id);
     if (!campaign) return res.status(404).json({ error: "Campaign not found" });
     res.json(campaign);
   });
 
-  app.post("/api/campaigns", (req, res) => {
+  apiRouter.post("/campaigns", (req, res) => {
     const { name, channel, segment, message } = req.body;
     const targetSegment = mockDb.segments.find(s => s.name === segment);
     const sentCount = targetSegment ? targetSegment.count : 10;
@@ -465,7 +459,7 @@ app.use((req, res, next) => {
     res.json(newCampaign);
   });
 
-  app.post("/api/campaigns/:id/toggle", (req, res) => {
+  apiRouter.post("/campaigns/:id/toggle", (req, res) => {
     const campaign = mockDb.campaigns.find(c => c.id === req.params.id);
     if (!campaign) return res.status(404).json({ error: "Campaign not found" });
     
@@ -483,7 +477,7 @@ app.use((req, res, next) => {
     res.json(campaign);
   });
 
-  app.get("/api/campaigns/:id/stats", (req, res) => {
+  apiRouter.get("/campaigns/:id/stats", (req, res) => {
     const campaign = mockDb.campaigns.find(c => c.id === req.params.id);
     if (!campaign) return res.status(404).json({ error: "Campaign not found" });
 
@@ -555,7 +549,7 @@ app.use((req, res, next) => {
     });
   });
 
-  app.get("/api/campaigns/:id/insight", async (req, res) => {
+  apiRouter.get("/campaigns/:id/insight", async (req, res) => {
     try {
       const campaign = mockDb.campaigns.find(c => c.id === req.params.id);
       if (!campaign) return res.status(404).json({ error: "Campaign not found" });
@@ -602,7 +596,7 @@ app.use((req, res, next) => {
     }
   });
 
-  app.post("/api/ai/draft", async (req, res) => {
+  apiRouter.post("/ai/draft", async (req, res) => {
     try {
       const { goal, segment, channel } = req.body;
       const response = await ai.models.generateContent({
@@ -616,7 +610,7 @@ app.use((req, res, next) => {
     }
   });
 
-  app.post("/api/ai/segment", async (req, res) => {
+  apiRouter.post("/ai/segment", async (req, res) => {
     try {
       const { text } = req.body;
       const response = await ai.models.generateContent({
@@ -644,6 +638,9 @@ app.use((req, res, next) => {
       res.status(500).json({ error: error.message });
     }
   });
+
+  app.use("/api", apiRouter);
+  app.use("/", apiRouter);
 
   // -- VITE MIDDLEWARE --
   if (process.env.NODE_ENV !== "production") {
