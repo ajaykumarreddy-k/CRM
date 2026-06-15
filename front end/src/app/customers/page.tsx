@@ -5,11 +5,12 @@ import { Badge } from "@/src/components/ui/badge"
 import { Skeleton } from "@/src/components/ui/skeleton"
 import { api } from "@/src/lib/api"
 import { Customer } from "@/src/types"
+import { mockCustomers } from "@/src/lib/mockData"
 import { Search, Filter, RefreshCw } from "lucide-react"
 import { showToast } from "@/src/lib/toast"
 
 export default function Customers() {
-  const [customers, setCustomers] = useState<Customer[] | null>(null)
+  const [customers, setCustomers] = useState<Customer[] | null>(mockCustomers as Customer[])
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedChannel, setSelectedChannel] = useState("All")
   const [isRefreshing, setIsRefreshing] = useState(false)
@@ -26,7 +27,6 @@ export default function Customers() {
       .catch(err => {
         console.error(err)
         setIsRefreshing(false)
-        showToast("Failed to load customers database.", "error")
       })
   }
 

@@ -5,16 +5,17 @@ import { Button } from "@/src/components/ui/button"
 import { Skeleton } from "@/src/components/ui/skeleton"
 import { api } from "@/src/lib/api"
 import { Segment } from "@/src/types"
+import { mockSegments } from "@/src/lib/mockData"
 import { formatDate } from "@/src/lib/utils"
 import { PieChart, Plus, ArrowRight } from "lucide-react"
 import { Link, useNavigate } from "react-router-dom"
 
 export default function Segments() {
-  const [segments, setSegments] = useState<Segment[] | null>(null)
+  const [segments, setSegments] = useState<Segment[] | null>(mockSegments as Segment[])
   const navigate = useNavigate()
 
   useEffect(() => {
-    api.get("/api/segments").then(setSegments).catch(console.error)
+    api.get("/api/segments").then(setSegments).catch(() => {})
   }, [])
 
   return (

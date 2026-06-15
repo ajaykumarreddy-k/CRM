@@ -17,6 +17,7 @@ import {
   MessageSquare,
   Volume2
 } from "lucide-react"
+import { mockInboxContacts } from "@/src/lib/mockData"
 
 interface Message {
   id: string
@@ -38,9 +39,9 @@ interface Contact {
 }
 
 export default function InboxPage() {
-  const [contacts, setContacts] = useState<Contact[]>([])
+  const [contacts, setContacts] = useState<Contact[]>(mockInboxContacts as Contact[])
   const [selectedContactId, setSelectedContactId] = useState<string>("1")
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [channelFilter, setChannelFilter] = useState("All")
   
@@ -55,19 +56,15 @@ export default function InboxPage() {
   const chatEndRef = useRef<HTMLDivElement>(null)
 
   const fetchContacts = (selectFirstIfEmpty = false) => {
-    setLoading(true)
     api.get("/api/inbox")
       .then((res: Contact[]) => {
         setContacts(res || [])
-        setLoading(false)
         if (selectFirstIfEmpty && res && res.length > 0) {
           setSelectedContactId(res[0].id)
         }
       })
       .catch((err) => {
-        console.error(err)
-        showToast("Failed to fetch inbox messages", "error")
-        setLoading(false)
+        // keep mock data
       })
   }
 

@@ -43,9 +43,19 @@ interface ChatMessage {
   text: string
 }
 
+// ── Hardcoded mock data — shown instantly, overridden by real API if available ──
+const MOCK_DASHBOARD: DashboardData = {
+  metrics: {
+    customers: 2847, campaigns: 14, sent: 128430, cvr: 4.7,
+    clients: 2847, clientsComparison: "+12%", clientsSubtitle: "vs 2,541 last month",
+    revenue: 48920, revenueComparison: "+18%", revenueSubtitle: "$41,450 last month",
+    projects: 37, projectsComparison: "+6", projectsSubtitle: "31 last month",
+  }
+}
+
 export default function Dashboard() {
-  const [data, setData] = useState<DashboardData | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [data, setData] = useState<DashboardData | null>(MOCK_DASHBOARD)
+  const [loading, setLoading] = useState(false)
   const [analyzing, setAnalyzing] = useState(false)
 
   // Chart options dropdown states
@@ -66,16 +76,10 @@ export default function Dashboard() {
   const dropdownRef2 = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    // Try real API — silently overrides mock data if backend is live
     api.get("/api/dashboard/summary")
-      .then((res) => {
-        setData(res)
-        setLoading(false)
-      })
-      .catch((err) => {
-        console.error(err)
-        showToast("Failed to fetch dashboard summary", "error")
-        setLoading(false)
-      })
+      .then((res) => { setData(res) })
+      .catch(() => { /* keep mock data */ })
 
     // Click outside dropdowns listener
     const handleClickOutside = (event: MouseEvent) => {

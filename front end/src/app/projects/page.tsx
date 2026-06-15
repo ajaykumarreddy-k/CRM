@@ -5,6 +5,7 @@ import { Button } from "@/src/components/ui/button"
 import { Badge } from "@/src/components/ui/badge"
 import { api } from "@/src/lib/api"
 import { showToast } from "@/src/lib/toast"
+import { mockProjects } from "@/src/lib/mockData"
 import { Plus, Search, HelpCircle, FileText, Calendar, DollarSign, MoreVertical, Trash2, Edit3, X, Check, CheckCircle2 } from "lucide-react"
 
 interface Project {
@@ -22,8 +23,8 @@ interface Project {
 }
 
 export default function ProjectsPage() {
-  const [projects, setProjects] = useState<Project[]>([])
-  const [loading, setLoading] = useState(true)
+  const [projects, setProjects] = useState<Project[]>(mockProjects as Project[])
+  const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [activeTab, setActiveTab] = useState<string>("All")
   
@@ -46,16 +47,12 @@ export default function ProjectsPage() {
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const fetchProjects = () => {
-    setLoading(true)
     api.get("/api/projects")
       .then((res) => {
         setProjects(res || [])
-        setLoading(false)
       })
       .catch((err) => {
-        console.error(err)
-        showToast("Failed to fetch projects", "error")
-        setLoading(false)
+        // keep mock data
       })
   }
 

@@ -6,6 +6,7 @@ import { Badge } from "@/src/components/ui/badge"
 import { Skeleton } from "@/src/components/ui/skeleton"
 import { api } from "@/src/lib/api"
 import { Product } from "@/src/types"
+import { mockProducts } from "@/src/lib/mockData"
 import { 
   Plus, Search, Filter, Pencil, Trash2, Tag, 
   DollarSign, Layers, TriangleAlert, Cpu, Server, 
@@ -14,7 +15,7 @@ import {
 import { showToast } from "@/src/lib/toast"
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState<Product[] | null>(null)
+  const [products, setProducts] = useState<Product[] | null>(mockProducts as Product[])
   const [activeTab, setActiveTab] = useState<"catalog" | "specs">("catalog")
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("All")
@@ -38,8 +39,7 @@ export default function ProductsPage() {
       const res = await api.get("/api/products")
       setProducts(res)
     } catch (err) {
-      console.error(err)
-      showToast("Failed to fetch products catalog", "error")
+      // keep mock data
     }
   }
 

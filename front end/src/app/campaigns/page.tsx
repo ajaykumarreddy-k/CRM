@@ -6,15 +6,16 @@ import { Badge } from "@/src/components/ui/badge"
 import { Skeleton } from "@/src/components/ui/skeleton"
 import { api } from "@/src/lib/api"
 import { Campaign } from "@/src/types"
+import { mockCampaigns } from "@/src/lib/mockData"
 import { Link } from "react-router-dom"
 import { Play, Pause, BarChart2, Plus } from "lucide-react"
 import { showToast } from "@/src/lib/toast"
 
 export default function Campaigns() {
-  const [campaigns, setCampaigns] = useState<Campaign[] | null>(null)
+  const [campaigns, setCampaigns] = useState<Campaign[] | null>(mockCampaigns as Campaign[])
 
   useEffect(() => {
-    api.get("/api/campaigns").then(setCampaigns).catch(console.error)
+    api.get("/api/campaigns").then(setCampaigns).catch(() => {})
   }, [])
 
   return (
