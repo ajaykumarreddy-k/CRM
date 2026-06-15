@@ -45,16 +45,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  // Restore session on mount
+  // Clear session on mount so login is required every time the app opens
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY)
-      if (stored) setUser(JSON.parse(stored))
-    } catch {
-      localStorage.removeItem(STORAGE_KEY)
-    } finally {
-      setIsLoading(false)
-    }
+    localStorage.removeItem(STORAGE_KEY)
+    setUser(null)
+    setIsLoading(false)
   }, [])
 
   const persist = (u: User) => {
