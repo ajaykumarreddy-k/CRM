@@ -3,10 +3,15 @@ import path from "path";
 import { GoogleGenAI, Type } from "@google/genai";
 import "dotenv/config";
 
-const ai = new GoogleGenAI({ 
-  apiKey: process.env.GEMINI_API_KEY,
-  httpOptions: { headers: { 'User-Agent': 'aistudio-build' } }
-});
+let ai: any = null;
+try {
+  ai = new GoogleGenAI({ 
+    apiKey: process.env.GEMINI_API_KEY || "dummy_key_to_prevent_crash",
+    httpOptions: { headers: { 'User-Agent': 'aistudio-build' } }
+  });
+} catch (err) {
+  console.warn("Failed to initialize GoogleGenAI", err);
+}
 
 const PORT = 3000;
 
@@ -207,6 +212,14 @@ const statsCache: Record<string, { sent: number, delivered: number, opened: numb
 
 const app = express();
 app.use(express.json());
+
+// Normalize req.url to always start with /api to handle Vercel's path stripping
+app.use((req, res, next) => {
+  if (req.url && !req.url.startsWith('/api')) {
+    req.url = '/api' + (req.url.startsWith('/') ? req.url : '/' + req.url);
+  }
+  next();
+});
 
 // -- API ROUTES --
   app.get("/api/dashboard/summary", (req, res) => {
