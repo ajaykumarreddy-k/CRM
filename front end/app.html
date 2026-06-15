@@ -7,6 +7,296 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- ── XENO CRM Mock API Interceptor ─────────────────────────────────────
+         Intercepts all /api/* fetch calls and returns rich test data.
+         Active when backend is not deployed. Safe to remove when backend is live.
+    ──────────────────────────────────────────────────────────────────────── -->
+    <script>
+    (function() {
+      var CUSTOMERS = [
+        {id:"1",name:"Sophie Turner",email:"sophie.turner@gmail.com",phone:"+1 (555) 210-4820",channel:"WhatsApp"},
+        {id:"2",name:"James Mitchell",email:"j.mitchell@outlook.com",phone:"+1 (555) 383-9201",channel:"Email"},
+        {id:"3",name:"Priya Sharma",email:"priya.s@yahoo.com",phone:"+91 98200 44312",channel:"SMS"},
+        {id:"4",name:"Carlos Mendez",email:"carlosmendez@proton.me",phone:"+52 55 3910 8843",channel:"RCS"},
+        {id:"5",name:"Emily Watson",email:"emwatson@company.io",phone:"+1 (555) 740-2291",channel:"WhatsApp"},
+        {id:"6",name:"Lucas Fernandez",email:"lucas.f@mail.com",phone:"+34 612 993 401",channel:"Email"},
+        {id:"7",name:"Aisha Okafor",email:"aisha.ok@gmail.com",phone:"+234 803 710 9991",channel:"SMS"},
+        {id:"8",name:"Nathan Brooks",email:"nbrooks@enterprise.com",phone:"+1 (555) 609-1123",channel:"WhatsApp"},
+        {id:"9",name:"Yuna Kim",email:"yunakim93@naver.com",phone:"+82 10 4423 8871",channel:"RCS"},
+        {id:"10",name:"Amelia Clarke",email:"a.clarke@oxford.ac.uk",phone:"+44 7700 900456",channel:"Email"},
+        {id:"11",name:"David Okonkwo",email:"david.ok@techfirm.ng",phone:"+234 802 100 4422",channel:"WhatsApp"},
+        {id:"12",name:"Isabella Rossi",email:"irossi@studio.it",phone:"+39 338 712 4901",channel:"SMS"},
+        {id:"13",name:"Haruto Yamamoto",email:"h.yamamoto@dev.jp",phone:"+81 90 6641 2231",channel:"Email"},
+        {id:"14",name:"Fatima Al-Rashid",email:"fatima.alr@corp.ae",phone:"+971 50 340 9912",channel:"WhatsApp"},
+        {id:"15",name:"Tom Henderson",email:"tom.h@startup.co",phone:"+1 (555) 822-3310",channel:"RCS"},
+        {id:"16",name:"Mei Lin",email:"meilin@wecloud.cn",phone:"+86 138 0013 8000",channel:"Email"},
+        {id:"17",name:"Samuel Adeyemi",email:"samadeyemi@gmail.com",phone:"+234 703 991 8821",channel:"SMS"},
+        {id:"18",name:"Chloe Dupont",email:"chloe.dupont@laposte.fr",phone:"+33 6 12 34 56 78",channel:"WhatsApp"},
+        {id:"19",name:"Ryan Patel",email:"ryan.patel@consulting.in",phone:"+91 99880 12345",channel:"Email"},
+        {id:"20",name:"Olivia Chen",email:"olivia.chen@pixel.us",phone:"+1 (555) 331-8802",channel:"WhatsApp"}
+      ];
+      var SEGMENTS = [
+        {id:"1",name:"High-Value Buyers",rules:[],count:312,createdAt:"2025-04-01T10:00:00Z"},
+        {id:"2",name:"WhatsApp Fans",rules:[],count:984,createdAt:"2025-03-15T08:30:00Z"},
+        {id:"3",name:"Win-Back Targets",rules:[],count:421,createdAt:"2025-03-28T14:45:00Z"},
+        {id:"4",name:"New Subscribers",rules:[],count:167,createdAt:"2025-04-05T09:15:00Z"},
+        {id:"5",name:"Email Engaged",rules:[],count:728,createdAt:"2025-03-10T11:00:00Z"},
+        {id:"6",name:"Loyalty Tier Gold",rules:[],count:89,createdAt:"2025-04-08T16:20:00Z"},
+        {id:"7",name:"Cart Abandoners",rules:[],count:253,createdAt:"2025-04-02T13:00:00Z"},
+        {id:"8",name:"SMS Opted-In",rules:[],count:502,createdAt:"2025-03-20T07:00:00Z"}
+      ];
+      var CAMPAIGNS = [
+        {id:"1",name:"Spring Sale Blast",channel:"WhatsApp",segment:"High-Value Buyers",status:"Sent",sent:312},
+        {id:"2",name:"Win-Back Re-engagement",channel:"Email",segment:"Win-Back Targets",status:"Paused",sent:0},
+        {id:"3",name:"New Member Welcome",channel:"SMS",segment:"New Subscribers",status:"Sent",sent:167},
+        {id:"4",name:"Flash Offer – 24h",channel:"RCS",segment:"Loyalty Tier Gold",status:"Sent",sent:89},
+        {id:"5",name:"Abandoned Cart Nudge",channel:"WhatsApp",segment:"Cart Abandoners",status:"Paused",sent:0},
+        {id:"6",name:"Monthly Newsletter Q2",channel:"Email",segment:"Email Engaged",status:"Sent",sent:728},
+        {id:"7",name:"Product Drop Alert",channel:"SMS",segment:"SMS Opted-In",status:"Sent",sent:502},
+        {id:"8",name:"Referral Rewards Drive",channel:"Email",segment:"High-Value Buyers",status:"Paused",sent:0}
+      ];
+      var INBOX = [
+        {id:"1",name:"Sophie Turner",avatar:"https://api.dicebear.com/7.x/avataaars/svg?seed=Sophie",email:"sophie.turner@gmail.com",status:"online",lastActive:"2m ago",unreadCount:3,channel:"WhatsApp",messages:[
+          {id:"m1",sender:"contact",text:"Hey! Quick question about my last order.",timestamp:"10:02 AM"},
+          {id:"m2",sender:"user",text:"Hi Sophie! Sure, what's up?",timestamp:"10:04 AM"},
+          {id:"m3",sender:"contact",text:"Was wondering if I could swap the color to navy?",timestamp:"10:05 AM"},
+          {id:"m4",sender:"contact",text:"It hasn't shipped yet, right?",timestamp:"10:05 AM"},
+          {id:"m5",sender:"contact",text:"Also, can I add another item to the same order?",timestamp:"10:06 AM"}
+        ]},
+        {id:"2",name:"James Mitchell",avatar:"https://api.dicebear.com/7.x/avataaars/svg?seed=James",email:"j.mitchell@outlook.com",status:"offline",lastActive:"1h ago",unreadCount:0,channel:"Email",messages:[
+          {id:"m1",sender:"user",text:"Hi James, following up on the contract.",timestamp:"9:00 AM"},
+          {id:"m2",sender:"contact",text:"Got it, I'll review and sign by EOD.",timestamp:"9:45 AM"},
+          {id:"m3",sender:"user",text:"Perfect, let me know if you need any changes.",timestamp:"9:47 AM"}
+        ]},
+        {id:"3",name:"Priya Sharma",avatar:"https://api.dicebear.com/7.x/avataaars/svg?seed=Priya",email:"priya.s@yahoo.com",status:"online",lastActive:"Just now",unreadCount:1,channel:"SMS",messages:[
+          {id:"m1",sender:"contact",text:"Are there any discounts this week?",timestamp:"11:00 AM"},
+          {id:"m2",sender:"user",text:"Yes! 20% off on orders above $50 today.",timestamp:"11:03 AM"},
+          {id:"m3",sender:"contact",text:"Amazing! I'll order now.",timestamp:"11:10 AM"}
+        ]},
+        {id:"4",name:"Emily Watson",avatar:"https://api.dicebear.com/7.x/avataaars/svg?seed=Emily",email:"emwatson@company.io",status:"online",lastActive:"5m ago",unreadCount:2,channel:"WhatsApp",messages:[
+          {id:"m1",sender:"contact",text:"I wanted to give feedback on my purchase.",timestamp:"8:30 AM"},
+          {id:"m2",sender:"user",text:"We'd love to hear it! Please go ahead.",timestamp:"8:35 AM"},
+          {id:"m3",sender:"contact",text:"The quality is excellent, but delivery was slow.",timestamp:"8:40 AM"},
+          {id:"m4",sender:"contact",text:"Would appreciate faster shipping next time.",timestamp:"8:41 AM"}
+        ]},
+        {id:"5",name:"Nathan Brooks",avatar:"https://api.dicebear.com/7.x/avataaars/svg?seed=Nathan",email:"nbrooks@enterprise.com",status:"offline",lastActive:"Yesterday",unreadCount:0,channel:"Email",messages:[
+          {id:"m1",sender:"contact",text:"Please send me the invoice for March.",timestamp:"Yesterday"},
+          {id:"m2",sender:"user",text:"Sent! Check your inbox.",timestamp:"Yesterday"}
+        ]}
+      ];
+      var PRODUCTS = [
+        {id:"1",name:"Xeno CRM Pro",category:"Software",price:299,stock:999,sales:412,revenue:123188,description:"Full-featured CRM with AI segmentation."},
+        {id:"2",name:"Analytics Add-on",category:"Software",price:99,stock:999,sales:218,revenue:21582,description:"Advanced revenue analytics module."},
+        {id:"3",name:"WhatsApp Connector",category:"Integration",price:49,stock:999,sales:875,revenue:42875,description:"Seamless WhatsApp Business API integration."},
+        {id:"4",name:"Email Automator",category:"Integration",price:79,stock:999,sales:631,revenue:49849,description:"Automated email workflow builder."},
+        {id:"5",name:"SMS Gateway Bundle",category:"Integration",price:59,stock:999,sales:340,revenue:20060,description:"Bulk SMS send & delivery reports."},
+        {id:"6",name:"AI Segment Engine",category:"AI Module",price:149,stock:999,sales:193,revenue:28757,description:"Gemini-powered dynamic audience builder."},
+        {id:"7",name:"Campaign Manager",category:"Software",price:129,stock:999,sales:287,revenue:37023,description:"Multi-channel campaign creation & tracking."},
+        {id:"8",name:"Unified Inbox",category:"Software",price:89,stock:999,sales:504,revenue:44856,description:"Centralised messaging across all channels."}
+      ];
+      var PROJECTS = [
+        {id:"1",clientName:"Sophie Turner",clientAvatar:"https://api.dicebear.com/7.x/avataaars/svg?seed=Sophie",clientEmail:"sophie.turner",projectName:"Q2 Email Re-engagement",projectDesc:"Automated email follow-up campaign for Q2 lead reactivation.",dueDate:"Apr 30",contractValue:1800,status:"In Progress",hasNote:true,notes:"Client wants A/B test results by Apr 15."},
+        {id:"2",clientName:"Nathan Brooks",clientAvatar:"https://api.dicebear.com/7.x/avataaars/svg?seed=Nathan",clientEmail:"nbrooks",projectName:"WhatsApp Drip Campaign",projectDesc:"7-step drip sequence targeting WhatsApp-preferred segment.",dueDate:"May 10",contractValue:2400,status:"In Progress",hasNote:false,notes:""},
+        {id:"3",clientName:"Priya Sharma",clientAvatar:"https://api.dicebear.com/7.x/avataaars/svg?seed=Priya",clientEmail:"priya.s",projectName:"Loyalty Tier Migration",projectDesc:"Migrate 500+ customers to new Gold loyalty tier program.",dueDate:"Mar 31",contractValue:950,status:"Completed",hasNote:true,notes:"Fully migrated, post-campaign report pending."},
+        {id:"4",clientName:"Carlos Mendez",clientAvatar:"https://api.dicebear.com/7.x/avataaars/svg?seed=Carlos",clientEmail:"carlosmendez",projectName:"SMS Opt-In Growth Drive",projectDesc:"Drive SMS subscription signups via in-app and web prompts.",dueDate:"May 20",contractValue:1100,status:"In Progress",hasNote:false,notes:""},
+        {id:"5",clientName:"James Mitchell",clientAvatar:"https://api.dicebear.com/7.x/avataaars/svg?seed=James",clientEmail:"j.mitchell",projectName:"CRM Onboarding Flow",projectDesc:"Set up new CRM workspace and import 200+ customer contacts.",dueDate:"May 1",contractValue:750,status:"Draft",hasNote:true,notes:"Waiting on client to share contact CSV export."},
+        {id:"6",clientName:"Emily Watson",clientAvatar:"https://api.dicebear.com/7.x/avataaars/svg?seed=Emily",clientEmail:"emwatson",projectName:"Cart Abandonment Sequence",projectDesc:"3-touch WhatsApp sequence targeting cart abandoners.",dueDate:"Apr 25",contractValue:1350,status:"On Review",hasNote:false,notes:""},
+        {id:"7",clientName:"Aisha Okafor",clientAvatar:"https://api.dicebear.com/7.x/avataaars/svg?seed=Aisha",clientEmail:"aisha.ok",projectName:"AI Segment Builder Pilot",projectDesc:"First live test of Gemini-powered natural language segmentation.",dueDate:"Mar 15",contractValue:600,status:"Completed",hasNote:true,notes:"Pilot exceeded expectations — 92% segment accuracy."},
+        {id:"8",clientName:"David Okonkwo",clientAvatar:"https://api.dicebear.com/7.x/avataaars/svg?seed=David",clientEmail:"david.ok",projectName:"Revenue Analytics Dashboard v2",projectDesc:"Rebuild revenue charts with AI projection overlays.",dueDate:"Jun 1",contractValue:2100,status:"Recommended",hasNote:false,notes:""}
+      ];
+
+      function mockResponse(data) {
+        return new Response(JSON.stringify(data), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+      function delay(fn, ms) {
+        return new Promise(function(res) { setTimeout(function() { res(fn()); }, ms || 250); });
+      }
+      function campaignStats(id) {
+        var c = CAMPAIGNS.find(function(x){return x.id===id;}) || CAMPAIGNS[0];
+        var s = c.sent || 450;
+        var delivered = Math.floor(s*0.97), opened = Math.floor(s*0.44),
+            clicked = Math.floor(s*0.18), converted = Math.floor(s*0.047), failed = s - delivered;
+        return {id:c.id,name:c.name,channel:c.channel,segment:c.segment,status:c.status,
+          message:"Hi {{name}}, check out our latest offer! 🎉",
+          sent:s,delivered:delivered,opened:opened,clicked:clicked,converted:converted,failed:failed,
+          cvr:"4.7%",sentAt:"2025-04-01T14:30:00Z",
+          statusBreakdown:{delivered:delivered,failed:failed,pending:0},
+          logs:[
+            {recipient:"Sophie Turner",status:"Delivered",timestamp:"2025-04-01T14:31:02Z"},
+            {recipient:"James Mitchell",status:"Opened",timestamp:"2025-04-01T14:33:45Z"},
+            {recipient:"Priya Sharma",status:"Clicked",timestamp:"2025-04-01T14:35:10Z"},
+            {recipient:"Nathan Brooks",status:"Delivered",timestamp:"2025-04-01T14:36:00Z"},
+            {recipient:"Emily Watson",status:"Failed",timestamp:"2025-04-01T14:36:55Z"}
+          ]};
+      }
+      function aiInsight(id) {
+        var insights = [
+          {insight:"44% open rate — 2× industry average. WhatsApp outperformed Email by 31% in clicks.",action:"Re-run this campaign targeting non-openers with a follow-up sequence."},
+          {insight:"Conversion rate of 4.7% matches top-tier benchmarks. Peak engagement at 2–4 PM.",action:"Schedule next campaign for 2 PM to maximise opens and clicks."},
+          {insight:"18% click-through rate is excellent. Most clicks came from the first CTA.",action:"A/B test a shorter message with a single bold CTA for win-back segment."},
+          {insight:"SMS segment converted 2.3× better than Email. Loyalty customers had highest engagement.",action:"Expand Loyalty Tier Gold by lowering LTV threshold to $750."}
+        ];
+        return insights[(parseInt(id||"1")-1) % insights.length];
+      }
+      function aiDraft(goal) {
+        var g = (goal||"").toLowerCase();
+        if (g.includes("follow")) return "Hi {{name}}, just checking in! We have exciting updates this week. Let me know if I can help with anything.";
+        if (g.includes("segment")||g.includes("whatsapp")) return "Your WhatsApp segment is updated — 984 contacts included. Ready to launch a campaign?";
+        if (g.includes("calendar")||g.includes("newsletter")) return "Q2 newsletter plan:\n• Week 1: Product highlights\n• Week 2: Customer story\n• Week 3: Promo offer\n• Week 4: Feedback survey";
+        if (g.includes("conversion")||g.includes("stat")) return "CVR is 4.7% — 23% above industry average. Top segment: 'High-Value Buyers' at 8.2% CVR.";
+        return "AI recommendation for \""+goal+"\": Target WhatsApp-preferred customers first for 22% higher open rate. Shall I draft the full campaign message?";
+      }
+
+      var _origFetch = window.fetch.bind(window);
+      window.fetch = function(input, init) {
+        var url = typeof input === 'string' ? input : (input instanceof Request ? input.url : String(input));
+        var method = (init && init.method ? init.method : (input instanceof Request ? input.method : 'GET')).toUpperCase();
+        var path = url.replace(/^https?:\/\/[^\/]+/, '');
+
+        // Dashboard
+        if (path === '/api/dashboard/summary' && method === 'GET')
+          return delay(function(){return mockResponse({metrics:{customers:2847,campaigns:14,sent:128430,cvr:4.7,clients:2847,clientsComparison:"+12%",clientsSubtitle:"vs 2,541 last month",revenue:48920,revenueComparison:"+18%",revenueSubtitle:"$41,450 last month",projects:37,projectsComparison:"+6",projectsSubtitle:"31 last month"}});});
+
+        // Customers
+        if (path === '/api/customers' && method === 'GET')
+          return delay(function(){return mockResponse({customers:CUSTOMERS,total:CUSTOMERS.length});});
+
+        // Segments
+        if (path === '/api/segments' && method === 'GET')
+          return delay(function(){return mockResponse(SEGMENTS);});
+        if (/^\/api\/segments\/[^\/]+$/.test(path) && method === 'GET') {
+          var sid = path.split('/').pop();
+          return delay(function(){return mockResponse(SEGMENTS.find(function(s){return s.id===sid;})||SEGMENTS[0]);});
+        }
+        if (path === '/api/segments' && method === 'POST') {
+          var body = JSON.parse((init&&init.body)||'{}');
+          var ns = Object.assign({id:String(Date.now()),rules:[],count:0,createdAt:new Date().toISOString()},body);
+          SEGMENTS.push(ns);
+          return delay(function(){return mockResponse(ns);});
+        }
+
+        // Campaigns
+        if (path === '/api/campaigns' && method === 'GET')
+          return delay(function(){return mockResponse(CAMPAIGNS);});
+        if (/^\/api\/campaigns\/[^\/]+\/stats$/.test(path) && method === 'GET') {
+          var cid = path.split('/')[3];
+          return delay(function(){return mockResponse(campaignStats(cid));});
+        }
+        if (/^\/api\/campaigns\/[^\/]+\/insight$/.test(path) && method === 'GET') {
+          var cid2 = path.split('/')[3];
+          return delay(function(){return mockResponse(aiInsight(cid2));}, 900);
+        }
+        if (/^\/api\/campaigns\/[^\/]+$/.test(path) && method === 'GET') {
+          var cid3 = path.split('/').pop();
+          return delay(function(){return mockResponse(campaignStats(cid3));});
+        }
+        if (/^\/api\/campaigns\/[^\/]+\/toggle$/.test(path) && method === 'POST') {
+          var cid4 = path.split('/')[3];
+          var camp = CAMPAIGNS.find(function(c){return c.id===cid4;});
+          if (camp) camp.status = camp.status==='Sent'?'Paused':'Sent';
+          return delay(function(){return mockResponse({status:camp?camp.status:'Sent'});});
+        }
+        if (/^\/api\/campaigns\/[^\/]+\/launch$/.test(path) && method === 'POST') {
+          var cid5 = path.split('/')[3];
+          var camp2 = CAMPAIGNS.find(function(c){return c.id===cid5;});
+          if (camp2){camp2.status='Sent';camp2.sent=camp2.sent||250;}
+          return delay(function(){return mockResponse({ok:true,status:'Sent',sent:camp2?camp2.sent:250});});
+        }
+        if (path === '/api/campaigns' && method === 'POST') {
+          var cb = JSON.parse((init&&init.body)||'{}');
+          var nc = Object.assign({id:String(Date.now()),sent:0,status:'Paused'},cb);
+          CAMPAIGNS.push(nc);
+          return delay(function(){return mockResponse(nc);});
+        }
+
+        // Inbox
+        if (path === '/api/inbox' && method === 'GET')
+          return delay(function(){return mockResponse(INBOX);});
+        if (/^\/api\/inbox\/[^\/]+\/read$/.test(path) && method === 'PUT') {
+          var iid = path.split('/')[3];
+          var ic = INBOX.find(function(c){return c.id===iid;});
+          if (ic) ic.unreadCount = 0;
+          return delay(function(){return mockResponse({ok:true});});
+        }
+        if (/^\/api\/inbox\/[^\/]+\/messages$/.test(path) && method === 'POST') {
+          var iid2 = path.split('/')[3];
+          var ib = JSON.parse((init&&init.body)||'{}');
+          var now = new Date();
+          var msg = {id:'m'+Date.now(),sender:ib.sender||'user',text:ib.text||'',
+            timestamp:now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})};
+          var ic2 = INBOX.find(function(c){return c.id===iid2;});
+          if (ic2) ic2.messages.push(msg);
+          return delay(function(){return mockResponse(msg);});
+        }
+
+        // Products
+        if (path === '/api/products' && method === 'GET')
+          return delay(function(){return mockResponse(PRODUCTS);});
+        if (/^\/api\/products\/[^\/]+$/.test(path) && method === 'GET') {
+          var pid = path.split('/').pop();
+          return delay(function(){return mockResponse(PRODUCTS.find(function(p){return p.id===pid;})||PRODUCTS[0]);});
+        }
+        if (path === '/api/products' && method === 'POST') {
+          var pb = JSON.parse((init&&init.body)||'{}');
+          var np = Object.assign({id:String(Date.now()),sales:0,revenue:0},pb);
+          PRODUCTS.push(np);
+          return delay(function(){return mockResponse(np);});
+        }
+        if (/^\/api\/products\/[^\/]+$/.test(path) && method === 'PUT') {
+          var puid = path.split('/').pop();
+          var pub2 = JSON.parse((init&&init.body)||'{}');
+          var pi = PRODUCTS.findIndex(function(p){return p.id===puid;});
+          if (pi!==-1) Object.assign(PRODUCTS[pi],pub2);
+          return delay(function(){return mockResponse(PRODUCTS[pi]||{});});
+        }
+        if (/^\/api\/products\/[^\/]+$/.test(path) && method === 'DELETE') {
+          var pdid = path.split('/').pop();
+          var pdi = PRODUCTS.findIndex(function(p){return p.id===pdid;});
+          if (pdi!==-1) PRODUCTS.splice(pdi,1);
+          return delay(function(){return mockResponse({ok:true});});
+        }
+
+        // Projects
+        if (path === '/api/projects' && method === 'GET')
+          return delay(function(){return mockResponse(PROJECTS);});
+        if (path === '/api/projects' && method === 'POST') {
+          var prb = JSON.parse((init&&init.body)||'{}');
+          var nprj = Object.assign({id:String(Date.now()),clientAvatar:'https://api.dicebear.com/7.x/avataaars/svg?seed='+Date.now(),hasNote:!!prb.notes},prb);
+          PROJECTS.push(nprj);
+          return delay(function(){return mockResponse(nprj);});
+        }
+        if (/^\/api\/projects\/[^\/]+$/.test(path) && method === 'PUT') {
+          var prid = path.split('/').pop();
+          var prb2 = JSON.parse((init&&init.body)||'{}');
+          var pri = PROJECTS.findIndex(function(p){return p.id===prid;});
+          if (pri!==-1) Object.assign(PROJECTS[pri],prb2,{hasNote:!!prb2.notes});
+          return delay(function(){return mockResponse(PROJECTS[pri]||{});});
+        }
+        if (/^\/api\/projects\/[^\/]+$/.test(path) && method === 'DELETE') {
+          var prdi = PROJECTS.findIndex(function(p){return p.id===path.split('/').pop();});
+          if (prdi!==-1) PROJECTS.splice(prdi,1);
+          return delay(function(){return mockResponse({ok:true});});
+        }
+
+        // AI
+        if ((path==='/api/ai/draft'||path==='/api/ai/inbox-draft') && method==='POST') {
+          var ab = JSON.parse((init&&init.body)||'{}');
+          var goal = ab.goal||ab.contactName||'message';
+          return delay(function(){return mockResponse({draft:aiDraft(goal)});}, 800);
+        }
+        if (path==='/api/ai/segment' && method==='POST')
+          return delay(function(){return mockResponse({name:'AI Generated Segment',rules:[{field:'ltv',op:'gt',value:500}],count:287,preview:CUSTOMERS.slice(0,5)});}, 1200);
+
+        // Passthrough to real API
+        return _origFetch(input, init);
+      };
+    })();
+    </script>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
