@@ -1,6 +1,5 @@
 import express from "express";
 import path from "path";
-import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Type } from "@google/genai";
 import "dotenv/config";
 
@@ -12,19 +11,33 @@ const ai = new GoogleGenAI({
 const PORT = 3000;
 
 // -- IN-MEMORY DB --
+const firstNames = ["Arjun", "Priya", "Ravi", "Sneha", "Kiran", "Anita", "Deepak", "Pooja", "Vijay", "Meera"];
+const lastNames = ["Sharma", "Patel", "Kumar", "Reddy", "Singh", "Joshi", "Mehta", "Nair", "Iyer", "Gupta"];
+const channels = ["WhatsApp", "SMS", "Email", "RCS"];
+
+const generatedCustomers = Array.from({ length: 100 }, (_, i) => {
+  const first = firstNames[Math.floor(Math.random() * firstNames.length)];
+  const last = lastNames[Math.floor(Math.random() * lastNames.length)];
+  const channel = channels[Math.floor(Math.random() * channels.length)];
+  const purchaseCount = Math.floor(Math.random() * 6);
+  const totalSpent = purchaseCount * (Math.floor(Math.random() * 100) + 20);
+  const daysAgo = Math.floor(Math.random() * 180) + 1;
+  const lastActive = new Date(Date.now() - daysAgo * 24 * 3600 * 1000).toISOString();
+  
+  return {
+    id: String(i + 1),
+    name: `${first} ${last}`,
+    email: `${first.toLowerCase()}.${last.toLowerCase()}${i}@example.com`,
+    phone: `+91${Math.floor(7000000000 + Math.random() * 3000000000)}`,
+    channel: channel,
+    purchase_count: purchaseCount,
+    last_active: lastActive,
+    total_spent: totalSpent
+  };
+});
+
 const mockDb = {
-  customers: [
-    { id: "1", name: "Alice Smith", email: "alice@example.com", phone: "+1234567890", channel: "Email", purchase_count: 5, last_active: "2026-05-15T10:00:00Z", total_spent: 250 },
-    { id: "2", name: "Bob Jones", email: "bob@example.com", phone: "+1987654321", channel: "WhatsApp", purchase_count: 1, last_active: "2026-06-08T14:30:00Z", total_spent: 45 },
-    { id: "3", name: "Charlie Brown", email: "charlie@example.com", phone: "+1555666777", channel: "SMS", purchase_count: 12, last_active: "2026-06-09T09:15:00Z", total_spent: 890 },
-    { id: "4", name: "Diana Prince", email: "diana@example.com", phone: "+1444555666", channel: "WhatsApp", purchase_count: 0, last_active: "2026-04-20T18:00:00Z", total_spent: 0 },
-    { id: "5", name: "Evan Wright", email: "evan@example.com", phone: "+1333444555", channel: "Email", purchase_count: 8, last_active: "2026-06-01T11:45:00Z", total_spent: 420 },
-    { id: "6", name: "Fiona Gallagher", email: "fiona@example.com", phone: "+1222333444", channel: "RCS", purchase_count: 3, last_active: "2026-05-28T16:20:00Z", total_spent: 130 },
-    { id: "7", name: "George Clark", email: "george@example.com", phone: "+1888999000", channel: "SMS", purchase_count: 2, last_active: "2026-06-07T12:00:00Z", total_spent: 75 },
-    { id: "8", name: "Hannah Abbott", email: "hannah@example.com", phone: "+1777888999", channel: "Email", purchase_count: 15, last_active: "2026-06-09T17:50:00Z", total_spent: 1540 },
-    { id: "9", name: "Ian Malcolm", email: "ian@example.com", phone: "+1666777888", channel: "WhatsApp", purchase_count: 4, last_active: "2026-05-10T08:30:00Z", total_spent: 195 },
-    { id: "10", name: "Julia Roberts", email: "julia@example.com", phone: "+1999000111", channel: "RCS", purchase_count: 0, last_active: "2026-03-15T15:00:00Z", total_spent: 0 }
-  ],
+  customers: generatedCustomers,
   segments: [
     { id: "1", name: "Active Buyers", rules: [{ field: "purchase_count", op: ">", value: "3" }], count: 5, createdAt: new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString() },
     { id: "2", name: "Lapsed Customers", rules: [{ field: "last_active", op: ">", value: "30" }], count: 3, createdAt: new Date(Date.now() - 12 * 24 * 3600 * 1000).toISOString() },
@@ -192,11 +205,10 @@ function evaluateRules(customer: any, rules: any[]) {
 // Cache for campaign live statistics polling
 const statsCache: Record<string, { sent: number, delivered: number, opened: number, clicked: number, converted: number, lastUpdate: number }> = {};
 
-async function startServer() {
-  const app = express();
-  app.use(express.json());
+const app = express();
+app.use(express.json());
 
-  // -- API ROUTES --
+// -- API ROUTES --
   app.get("/api/dashboard/summary", (req, res) => {
     const totalSent = mockDb.campaigns.reduce((acc, c) => acc + c.sent, 0);
     res.json({
@@ -622,22 +634,25 @@ async function startServer() {
 
   // -- VITE MIDDLEWARE --
   if (process.env.NODE_ENV !== "production") {
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: "spa",
+    import("vite").then(async ({ createServer: createViteServer }) => {
+      const vite = await createViteServer({
+        server: { middlewareMode: true },
+        appType: "spa",
+      });
+      app.use(vite.middlewares);
+      app.listen(PORT, "0.0.0.0", () => {
+        console.log(`Server running on http://localhost:${PORT}`);
+      });
     });
-    app.use(vite.middlewares);
-  } else {
+  } else if (!process.env.VERCEL) {
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
     app.get('*', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
   }
 
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
-}
-
-startServer();
+export default app;
