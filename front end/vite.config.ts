@@ -10,16 +10,14 @@ export default defineConfig(() => {
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        '@': path.resolve(process.cwd(), '.'),
       },
     },
     build: {
       rollupOptions: {
         input: {
-          // LaunchPage — builds to dist/index.html (root)
-          main: path.resolve(__dirname, 'index.html'),
-          // React CRM SPA — builds to dist/app.html
-          app: path.resolve(__dirname, 'app.html'),
+          main: path.resolve(process.cwd(), 'index.html'),
+          app: path.resolve(process.cwd(), 'app.html'),
         },
       },
     },
